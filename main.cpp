@@ -56,13 +56,12 @@ int main(void)
 
         for (unsigned int j = 0; j < N[i]; j++)
         {
-            while (tmp > 1000000000)
+            do            
             {
                 cout << "x" << j + 1 << ": ";
                 cin >> tmp;
                 
-            }
-            AddToVector(x[i], tmp);
+            } while (tmp > 1000000000 || !AddToVector(x[i], tmp));
             tmp = 1000000001;
         }
     }
@@ -137,8 +136,54 @@ bool AddToVector(vector<unsigned int> &xs, unsigned int number)
 
         while (true)
         {
-            //if ()
-            break;
+            if (number == xs[mini] || number == xs[maxi] || number == xs[avg])
+            {
+                return false;
+            }
+            if (number < xs[avg])
+            {
+                if (avg > 0)
+                {
+                    if (number > xs[avg - 1])
+                    {
+                        xs.insert(xs.begin() + avg, number);
+                        return true;
+                    }
+                    else
+                    {
+                        maxi = avg;    
+                    }                   
+                }
+                else // avg == 0
+                {
+                    xs.insert(xs.begin(), number);
+                    return true;
+                }
+                
+            }
+            else // (number > xs[avg])
+            {
+                if (avg < xs.size() - 1)
+                {
+                    if (number < xs[avg + 1])
+                    {
+                        xs.insert(xs.begin() + avg + 1, number);
+                        return true;
+                    }
+                    else
+                    {
+                        mini = avg;    
+                    }                   
+                }
+                else // avg == 0
+                {
+                    xs.push_back(number);
+                    return true;
+                }
+            }
+
+            avg = (mini + maxi) / 2;
+
         }
 
     }
