@@ -92,7 +92,17 @@ int main(void)
 //function resolving the issue of aggressive cows
 unsigned int AggrCows(unsigned int N, unsigned int C, vector<unsigned int> xs)
 {
-    unsigned int ret {};
+    // storing the position of stall where a cow is located
+    // not sure it will be needed, but it will be there for now
+    vector<unsigned int> where_are_cows;
+    where_are_cows.resize(C);
+    where_are_cows[0] = xs[0];
+    where_are_cows[C - 1] = xs[xs.size() - 1];
+
+    // ret - variable to be returned
+    // avg - average 
+    unsigned int avg {(where_are_cows[C - 1] - where_are_cows[0]) / (C - 1)}, ret {avg};
+
 
     /* TO DO */
     
