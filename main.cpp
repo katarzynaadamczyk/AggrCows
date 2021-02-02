@@ -7,7 +7,7 @@ using namespace std;
 // DECLARATIONS OF FUNCTIONS
 
 //function resolving the issue of aggressive cows
-unsigned int AggrCows(unsigned int N, unsigned int C, vector<unsigned int> xs);
+unsigned int AggrCows(unsigned int final_pos, unsigned int C, vector<unsigned int> xs, unsigned int start_pos = 0);
 
 //function adding new number to vector of xs setting it to the right position so that it is already sorted
 bool AddToVector(vector<unsigned int> &xs, unsigned int number);
@@ -74,7 +74,7 @@ int main(void)
         cout << "TEST CASE no " << i + 1 << endl;
         cout << endl;
         print(x[i], N[i], C[i]);
-        tmp = AggrCows(N[i], C[i], x[i]);
+        tmp = AggrCows(N[i] - 1, C[i], x[i]);
         cout << "The smallest distance between cows equals: " << tmp << "." << endl << endl;
     }
 
@@ -90,22 +90,65 @@ int main(void)
 
 //**************************************************************************************
 //function resolving the issue of aggressive cows
-unsigned int AggrCows(unsigned int N, unsigned int C, vector<unsigned int> xs)
+unsigned int AggrCows(unsigned int final_pos, unsigned int C, vector<unsigned int> xs, unsigned int start_pos)
 {
-    // storing the position of stall where a cow is located
-    // not sure it will be needed, but it will be there for now
-    vector<unsigned int> where_are_cows;
-    where_are_cows.resize(C);
-    where_are_cows[0] = xs[0];
-    where_are_cows[C - 1] = xs[xs.size() - 1];
+    // conditions for returning from recursion
+    if (C > (final_pos - start_pos + 1) || C < 2)
+    {
+        return 0;
+    }
+    if (C == 2)
+    {
+        return (xs[final_pos] - xs[start_pos]);
+    }
 
-    // ret - variable to be returned
-    // avg - average 
-    unsigned int avg {(where_are_cows[C - 1] - where_are_cows[0]) / (C - 1)}, ret {avg};
-
-
-    /* TO DO */
+    // divide and conquer algorithm based on recursion and binary search algorithms
+    // we search in each half the largest minimum distance, then we check in 1/4 vs 3/4 etc
     
+    unsigned int avg {(final_pos + start_pos) / 2}, ret {}, first_res, sec_res;
+    int i {};
+    vector<bool> changed;
+    changed.resize(final_pos - start_pos + 1);
+
+    while (avg > start_pos && avg < (final_pos))
+    {
+        if (C % 2 == 1)
+        {
+            first_res = AggrCows(avg, (C + 1) / 2, xs, start_pos);
+            sec_res = AggrCows(final_pos, (C + 1) / 2, xs, avg);
+        }
+        else
+        {
+            first_res = AggrCows(avg, C / 2, xs, start_pos);
+            sec_res = AggrCows(final_pos, C / 2 + 1, xs, avg);
+        }
+        
+        // condition for ending while loop
+        if (changed[avg - start_pos] || first_res == 0 || sec_res == 0)
+        {
+            break;
+        }
+        else if (first_res > sec_res)
+        {
+            if (sec_res > ret)
+            {
+                ret = sec_res;
+            }
+            
+            changed[avg - start_pos] = true;
+            avg = (avg + start_pos) / 2;
+        }
+        else  // if (sec_res >= first_res)
+        {
+            if (first_res > ret)
+            {
+                ret = first_res;
+            }
+            changed[avg - start_pos] = true;
+            avg = (avg + final_pos) / 2;
+        }
+    }
+
     return ret;
 }
 
