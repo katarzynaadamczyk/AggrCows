@@ -128,14 +128,15 @@ unsigned int AggrCows(unsigned int final_pos, unsigned int C, vector<unsigned in
         {
             break;
         }
-        else if (first_res > sec_res)
+
+        changed[avg - start_pos] = true;
+        
+        if (first_res > sec_res)
         {
             if (sec_res > ret)
             {
                 ret = sec_res;
             }
-            
-            changed[avg - start_pos] = true;
             avg = (avg + start_pos) / 2;
         }
         else  // if (sec_res >= first_res)
@@ -144,7 +145,6 @@ unsigned int AggrCows(unsigned int final_pos, unsigned int C, vector<unsigned in
             {
                 ret = first_res;
             }
-            changed[avg - start_pos] = true;
             avg = (avg + final_pos) / 2;
         }
     }
