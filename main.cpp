@@ -3,6 +3,10 @@
 
 using namespace std;
 
+// GLOBAL data for counting steps in aggrcows algorithm
+unsigned int steps {};
+
+
 //**************************************************************************************
 // DECLARATIONS OF FUNCTIONS
 
@@ -74,8 +78,10 @@ int main(void)
         cout << "TEST CASE no " << i + 1 << endl;
         cout << endl;
         print(x[i], N[i], C[i]);
+        unsigned int tmp2 = steps;
         tmp = AggrCows(N[i] - 1, C[i], x[i]);
-        cout << "The smallest distance between cows equals: " << tmp << "." << endl << endl;
+        cout << "The smallest distance between cows equals: " << tmp << "." << endl;
+        cout << "Counted in: " << steps - tmp2 << " steps." << endl << endl;
     }
 
 
@@ -92,6 +98,9 @@ int main(void)
 //function resolving the issue of aggressive cows
 unsigned int AggrCows(unsigned int final_pos, unsigned int C, vector<unsigned int> xs, unsigned int start_pos)
 {
+    // counting new step
+    steps++;
+    
     // conditions for returning from recursion
     if (C > (final_pos - start_pos + 1) || C < 2)
     {
@@ -109,6 +118,8 @@ unsigned int AggrCows(unsigned int final_pos, unsigned int C, vector<unsigned in
     int i {};
     vector<bool> changed;
     changed.resize(final_pos - start_pos + 1);
+    changed[0] = true;
+    changed[final_pos - start_pos] = true;
 
     while (avg > start_pos && avg < (final_pos))
     {
